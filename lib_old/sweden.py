@@ -12,7 +12,7 @@ def get_repo_root():
                                    universal_newlines=True).rstrip()
 
 
-# ROOT_dir = get_repo_root()
+ROOT_dir = get_repo_root()
 
 
 class GroundTruthLoader:
@@ -26,17 +26,17 @@ class GroundTruthLoader:
 
     def load_zones(self):
         # EPSG: 3006
-        _zones = gpd.read_file('../dbs/sweden/zones/DeSO/DeSO_2018_v2.shp')
+        _zones = gpd.read_file(ROOT_dir + '/dbs/sweden/zones/DeSO/DeSO_2018_v2.shp')
         self.zones = _zones.rename(columns={"deso": "zone"})[['zone', 'geometry']]
 
     def load_population(self):
-        self.population = pd.read_csv("../dbs/sweden/zones/population.csv")
+        self.population = pd.read_csv(ROOT_dir + "/dbs/sweden/zones/population.csv")
 
     def create_boundary(self):
         self.boundary = self.zones.assign(a=1).dissolve(by='a').simplify(tolerance=0.2).to_crs("EPSG:4326")
 
     def load_odm(self):
-        trips = pd.read_csv("../dbs/sweden/survey/day_trips.csv")
+        trips = pd.read_csv(ROOT_dir + "/dbs/sweden/survey/day_trips.csv")
         trips = trips.loc[:, ["sub_id", 'trip_id', 'trip_main_id', 'distance_main',
                               'date', "origin_main_deso", "desti_main_deso", 'trip_weight']]
         trips = trips.drop_duplicates(subset=["sub_id", 'trip_id', 'trip_main_id'])

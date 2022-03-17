@@ -12,7 +12,7 @@ def get_repo_root():
                                    universal_newlines=True).rstrip()
 
 
-#ROOT_dir = get_repo_root()
+ROOT_dir = get_repo_root()
 
 
 def trip_row(df):
@@ -32,14 +32,14 @@ class GroundTruthLoader:
 
     def load_zones(self):
         # EPSG:28992
-        _zones = gpd.read_file('../dbs/netherlands/zones/CBS_PC4_2017_v1.shp')
+        _zones = gpd.read_file(ROOT_dir + '/dbs/netherlands/zones/CBS_PC4_2017_v1.shp')
         self.zones = _zones.rename(columns={"PC4": "zone"})[['zone', 'geometry']]
 
     def create_boundary(self):
         self.boundary = self.zones.assign(a=1).dissolve(by='a').simplify(tolerance=0.2).to_crs("EPSG:4326")
 
     def load_odm(self):
-        sheet1 = pd.read_excel("../dbs/netherlands/survey/OViN2017_Databestand.xlsx")
+        sheet1 = pd.read_excel(ROOT_dir + "/dbs/netherlands/survey/OViN2017_Databestand.xlsx")
         trips = sheet1[
             ['OPID', 'AfstV', 'Wogem', 'Jaar', 'Maand', 'Dag', 'VerplID',
              'VertUur', 'VertPC', 'AankUur', 'AankPC', 'FactorV']]
