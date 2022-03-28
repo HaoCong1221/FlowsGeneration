@@ -4,4 +4,3 @@ dbs
 *.pyc
 .ipynb_checkpoints
 bds
-results
