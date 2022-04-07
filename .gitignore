@@ -4,3 +4,5 @@ dbs
 *.pyc
 .ipynb_checkpoints
 bds
+*csv
+*txt
