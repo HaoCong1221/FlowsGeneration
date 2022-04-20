@@ -1,4 +1,4 @@
-#This is for 1km,3km,4km,5km
+#This is for 1km,3km,4km,4km.5km,10km in VG
 import multiprocessing
 import sys
 sys.path.append('../lib/')
@@ -82,24 +82,40 @@ def ODM_zone_level(index, area, begin_index, end_index, bigzone_name, population
     f_min = 1/T
     parameter = math.log(f_max / f_min)
 
+    P = area * r_average * parameter
+
     
     for i in range(begin_index, end_index):
         print("I am process {}, I am computing index {}, total index {}.".format(index, i, len(bigzone_name)))
         element = dict()
         for j in range(i, len(bigzone_name)): 
             average_daily_trips = 0
-            for begin in range(0, len(big_within[bigzone_name[i]])):
-                for end in range(0, len(big_within[bigzone_name[j]])):
-                    if begin != end:
-                        deltax = (geometry[big_within[bigzone_name[i]][begin]].centroid.x - geometry[big_within[bigzone_name[j]][end]].centroid.x) / 1000                    
-                        deltay = (geometry[big_within[bigzone_name[i]][begin]].centroid.y - geometry[big_within[bigzone_name[j]][end]].centroid.y) / 1000
+            if i == j:
+                for begin in range(0, len(big_within[bigzone_name[i]])):
+                    for end in range(begin + 1, len(big_within[bigzone_name[j]])):
+                            deltax = (geometry[big_within[bigzone_name[i]][begin]].centroid.x - geometry[big_within[bigzone_name[j]][end]].centroid.x) / 1000                    
+                            deltay = (geometry[big_within[bigzone_name[i]][begin]].centroid.y - geometry[big_within[bigzone_name[j]][end]].centroid.y) / 1000
                     
-                        distance = deltax * deltax + deltay * deltay
+                            distance = deltax * deltax + deltay * deltay
 
-                        tmp =  area * r_average  / distance * parameter
+                            tmp =  1  / distance
                         
-                        average_daily_trips = average_daily_trips + tmp * ( population_density[big_within[bigzone_name[i]][begin]] + population_density[big_within[bigzone_name[j]][end]] )
-            element[bigzone_name[j]] = average_daily_trips
+                            average_daily_trips = average_daily_trips + tmp * ( population_density[big_within[bigzone_name[i]][begin]] + population_density[big_within[bigzone_name[j]][end]] )
+
+                element[bigzone_name[j]] = 2 * P * average_daily_trips
+            else:
+                for begin in range(0, len(big_within[bigzone_name[i]])):
+                    for end in range(0, len(big_within[bigzone_name[j]])):
+                            deltax = (geometry[big_within[bigzone_name[i]][begin]].centroid.x - geometry[big_within[bigzone_name[j]][end]].centroid.x) / 1000                    
+                            deltay = (geometry[big_within[bigzone_name[i]][begin]].centroid.y - geometry[big_within[bigzone_name[j]][end]].centroid.y) / 1000
+                    
+                            distance = deltax * deltax + deltay * deltay
+
+                            tmp =  1  / distance
+                        
+                            average_daily_trips = average_daily_trips + tmp * ( population_density[big_within[bigzone_name[i]][begin]] + population_density[big_within[bigzone_name[j]][end]] )
+
+                element[bigzone_name[j]] = P * average_daily_trips
         model_output[bigzone_name[i]] = element
 
 
@@ -117,10 +133,10 @@ if __name__ == '__main__':
     global bigzone_name, population_density, geometry, big_within
     totalProcess = 4
 
-    area = 9
-    gpd_file = '../results/grids_vgr_3km_density_deso.shp'
+    area = 100
+    gpd_file = '../results/grids_vgr_10km_density_deso.shp'
     zone_file = '../dbs/sweden/zones/DeSO/DeSO_2018_v2.shp'
-    results_output = "../results/model_output_3km.txt"
+    results_output = "../results/model_output_10km.txt"
     
 
     preprocess(gpd_file, zone_file)

@@ -1,4 +1,4 @@
-# This is for 2km
+# This is only for 2km in VG，because some format is different from the others. 
 import multiprocessing
 import sys
 sys.path.append('../lib/')

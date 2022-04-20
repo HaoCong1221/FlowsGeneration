@@ -1,3 +1,6 @@
+# After running this code, we found the time needed doesn't reduced.
+# We shouldn't use this code, because multithread couldn't speed up our calculation. 
+# The reason is that our task is CPU-bound, we should use multiprocess to speed up.
 import sys
 sys.path.append('../lib/')
 
