@@ -29,7 +29,7 @@ ratio.data.extraction <- function(region){
 
 df.ratio.data <- rbind(ratio.data.extraction('sweden'),
                        ratio.data.extraction('netherlands'))
-write.csv(df.ratio.data, "results/ratio_data.csv", row.names = FALSE)
+write.csv(df.ratio.data, "results/distance_ratio_data.csv", row.names = FALSE)
 
 # Simulation-based ratio
 df.total <- read.csv('dbs/distance_ratio_simulation.csv')
@@ -42,4 +42,4 @@ df_stats <- df.total %>%
             lower_ratio = quantile(diff, 0.25),
             upper_ratio = quantile(diff, 0.75))
 df_stats <- subset(df_stats, select = -gp)
-write.csv(df_stats, "results/ratio_simulation.csv", row.names = FALSE)
+write.csv(df_stats, "results/distance_ratio_simulation.csv", row.names = FALSE)
