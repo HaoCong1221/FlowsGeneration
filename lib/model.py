@@ -5,6 +5,16 @@ from tqdm import tqdm
 import math
 from sklearn.metrics import pairwise_distances
 import sweden
+import scipy.interpolate
+
+df_data = pd.read_csv('D:/FlowsGeneration/results/distance_ratio_data.csv')
+df_simulation = pd.read_csv('D:/FlowsGeneration/results/distance_ratio_simulation.csv')
+sp_data_sweden = scipy.interpolate.interp1d(df_data.loc[df_data.country == 'sweden', ['distance']].values.reshape(-1),
+                                            df_data.loc[df_data.country == 'sweden', ['ratio']].values.reshape(-1),
+                                            bounds_error=False, fill_value=1.5)
+sp_data_simulation = scipy.interpolate.interp1d(df_simulation.loc[:, ['distance']].values.reshape(-1),
+                                                df_simulation.loc[:, ['ratio']].values.reshape(-1),
+                                                bounds_error=False, fill_value=1.5)
 
 
 def miu(density=None, r=None, f_home=None):
@@ -43,6 +53,10 @@ def zone_flows(grids=None, T=1000, f_max=1, area=1, r=1, f_home=1):
     flows = flows.reset_index()
     flows.loc[:, 'v_ij'] = vij_total
     flows.loc[:, 'v_ij'] = flows.loc[:, 'v_ij'] / flows.loc[:, 'd_ij']**2
+    flows.loc[:, 'D_ij_data'] = sp_data_sweden(flows.loc[:, 'd_ij'])
+    flows.loc[flows['d_ij'] == 0, 'D_ij_data'] = 0
+    flows.loc[:, 'D_ij_sim'] = sp_data_simulation(flows.loc[:, 'd_ij'])
+    flows.loc[flows['d_ij'] == 0, 'D_ij_sim'] = 0
     return flows
 
 
@@ -65,7 +79,7 @@ def odm(grids=None, grids_upper=None, grid_size=(1, 10)):
     # Indicate the size of grids
     flows_within.loc[:, 'grid_type'] = grid_size[0]
     flows_between.loc[:, 'grid_type'] = grid_size[1]
-    selected_cols = ['ozone', 'dzone', 'd_ij', 'v_ij', 'grid_type']
+    selected_cols = ['ozone', 'dzone', 'd_ij', 'D_ij_data', 'D_ij_sim', 'v_ij', 'grid_type']
     return pd.concat([flows_within.loc[:, selected_cols], flows_between.loc[:, selected_cols]])
 
 
@@ -98,9 +112,6 @@ class ModelEvaluation:
         self.gt.load_zones()
         # Load ground-truth survey data into ODM form
         self.gt.load_odm()
-        self.gt.odm = self.gt.odm.rename_axis(['ozone', 'dzone'])
-        self.gt.odm.name = 'v_ij_gt'
-        self.gt.odm = self.gt.odm.reset_index()
 
     def gt_aggregation(self, agg_level=5):
         self.odm = self.gt.odm.copy()
@@ -110,7 +121,8 @@ class ModelEvaluation:
 
     def comparison_ssi(self, df_odm_agg=None):
         flows_c = self.odm.loc[self.odm['v_ij_gt'] != 0, :].merge(df_odm_agg, on=['ozone_deso', 'dzone_deso'],
-                                                                           how='inner')
+                                                                  how='inner')
+        # Convert trip number to trip frequency (ranging between 0 and 1)
         flows_c.loc[:, 'v_ij_gt'] = flows_c.loc[:, 'v_ij_gt'] / flows_c.loc[:, 'v_ij_gt'].sum()
         flows_c.loc[:, 'v_ij'] = flows_c.loc[:, 'v_ij'] / flows_c.loc[:, 'v_ij'].sum()
         flows_c.loc[:, 'v_ij_min'] = flows_c.apply(lambda row: min(row['v_ij_gt'], row['v_ij']),

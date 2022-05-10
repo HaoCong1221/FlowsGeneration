@@ -21,7 +21,6 @@ class GroundTruthLoader:
         self.odm = None
         self.boundary = None
         self.bbox = None
-        self.trip_distances = None
         self.population = None
 
     def load_zones(self):
@@ -43,13 +42,22 @@ class GroundTruthLoader:
         trips["T"] = trips["date"].apply(lambda x: pd.to_datetime(x))
         trips = trips.loc[~trips["T"].apply(lambda x: x.weekday()).isin([5, 6]), :]
         trips.dropna(axis=0, how='any', inplace=True)
-        # Prepare ODM
-        odms = trips.groupby(['origin_main_deso', 'desti_main_deso']).sum()['trip_weight']
-        print(odms.head())
-        z = self.zones.zone
-        odms = odms.reindex(pd.MultiIndex.from_product([z, z], names=['ozone', 'dzone']), fill_value=0)
-        self.odm = odms / odms.sum()
-        # self.odm = odms
+        # Prepare ODM (with only non-zero pairs)
+        odms = trips.groupby(['origin_main_deso', 'desti_main_deso']).sum()['trip_weight'].reset_index()
+        odms.columns = ['ozone', 'dzone', 'v_ij_gt']
+        # z = self.zones.zone
+        # odms = odms.reindex(pd.MultiIndex.from_product([z, z], names=['ozone', 'dzone']), fill_value=0)
+        # self.odm = odms / odms.sum()
+        self.odm = odms
         # Prepare the actual trip distances
-        self.trip_distances = trips.loc[:, ['distance_main', 'trip_weight']].rename(columns={'distance_main': 'distance',
-                                                                                             'trip_weight': 'weight'})
+        trip_distances = trips.loc[:, ['origin_main_deso', 'desti_main_deso',
+                                       'distance_main', 'trip_weight']].rename(columns={'distance_main': 'distance',
+                                                                                        'trip_weight': 'weight'})
+        def weighted_mean(data):
+            d = sum(data['distance'] * data['weight']) / sum(data['weight'])
+            return pd.Series({'D': d})
+
+        trip_distances = trip_distances.groupby(['origin_main_deso', 'desti_main_deso']).apply(weighted_mean).reset_index()
+        trip_distances.columns = ['ozone', 'dzone', 'D_ij_gt']
+        self.odm = self.odm.merge(trip_distances, on=['ozone', 'dzone'], how='left')
+
