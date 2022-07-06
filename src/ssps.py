@@ -88,7 +88,7 @@ def computing(area, miu, parameter, sp_data_sweden_x, sp_data_sweden_y, sp_data_
     return flows, flows_d, flows_D_survey, flows_D_simulation
 
 if __name__ == "__main__":  
-    target_ssp = 'ssp1_{}'
+    target_ssp = 'ssp2_{}'
     target_name = ["yr2010", "yr2020", "yr2030", "yr2040", "yr2050", "yr2060", "yr2070", "yr2080", "yr2090", "yr2100"]
     poplution = []
     
@@ -156,18 +156,18 @@ if __name__ == "__main__":
         f.write('\n')
         f.write('Total popultion: [{},{},{},{},{},{},{},{},{},{}]\n'.format(poplution[0], poplution[1], poplution[2], poplution[3], poplution[4], poplution[5], poplution[6], poplution[7], poplution[8], poplution[9]))
 
-        f.write('Total flows: [{},{},{},{},{},{},{},{},{},{}]\n'.format(flows[0], flows[1], flows[2], flows[3], flows[4], flows[5], flows[6], flows[7], flows[8], flows[9]))
+        f.write('Total flows: [{},{},{},{},{},{},{},{},{},{}]\n'.format(total_flows[0], total_flows[1], total_flows[2], total_flows[3], total_flows[4], total_flows[5], total_flows[6], total_flows[7], total_flows[8], total_flows[9]))
 
-        f.write('Total travel_demand_d: [{},{},{},{},{},{},{},{},{},{}]\n'.format(flows_d[0], flows_d[1], flows_d[2], flows_d[3], flows_d[4], flows_d[5], flows_d[6], flows_d[7], flows_d[8], flows_d[9]))
+        f.write('Total travel_demand_d: [{},{},{},{},{},{},{},{},{},{}]\n'.format(total_travel_demand_d[0], total_travel_demand_d[1], total_travel_demand_d[2], total_travel_demand_d[3], total_travel_demand_d[4], total_travel_demand_d[5], total_travel_demand_d[6], total_travel_demand_d[7], total_travel_demand_d[8], total_travel_demand_d[9]))
 
-        f.write('Total travel_demand_D_survey: [{},{},{},{},{},{},{},{},{},{}]\n'.format(flows_D_survey[0], flows_D_survey[1], flows_D_survey[2], flows_D_survey[3], flows_D_survey[4], flows_D_survey[5], flows_D_survey[6], flows_D_survey[7], flows_D_survey[8], flows_D_survey[9]))
+        f.write('Total travel_demand_D_survey: [{},{},{},{},{},{},{},{},{},{}]\n'.format(total_travel_demand_D_survey[0], total_travel_demand_D_survey[1], total_travel_demand_D_survey[2], total_travel_demand_D_survey[3], total_travel_demand_D_survey[4], total_travel_demand_D_survey[5], total_travel_demand_D_survey[6], total_travel_demand_D_survey[7], total_travel_demand_D_survey[8], total_travel_demand_D_survey[9]))
 
-        f.write('Total travel_demand_D_simulation: [{},{},{},{},{},{},{},{},{},{}]\n'.format(flows_D_simulation[0], flows_D_simulation[1], flows_D_simulation[2], flows_D_simulation[3], flows_D_simulation[4], flows_D_simulation[5], flows_D_simulation[6], flows_D_simulation[7], flows_D_simulation[8], flows_D_simulation[9]))
+        f.write('Total travel_demand_D_simulation: [{},{},{},{},{},{},{},{},{},{}]\n'.format(total_travel_demand_D_simulation[0], total_travel_demand_D_simulation[1], total_travel_demand_D_simulation[2], total_travel_demand_D_simulation[3], total_travel_demand_D_simulation[4], total_travel_demand_D_simulation[5], total_travel_demand_D_simulation[6], total_travel_demand_D_simulation[7], total_travel_demand_D_simulation[8], total_travel_demand_D_simulation[9]))
 
-        f.write('Flows per people: [{},{},{},{},{},{},{},{},{},{}]\n'.format(flows_p[0], flows_p[1], flows_p[2], flows_p[3], flows_p[4], flows_p[5], flows_p[6], flows_p[7], flows_p[8], flows_p[9]))
+        f.write('Flows per people: [{},{},{},{},{},{},{},{},{},{}]\n'.format(total_flows_p[0], total_flows_p[1], total_flows_p[2], total_flows_p[3], total_flows_p[4], total_flows_p[5], total_flows_p[6], total_flows_p[7], total_flows_p[8], total_flows_p[9]))
 
-        f.write('Travel_demand_d per people: [{},{},{},{},{},{},{},{},{},{}]\n'.format(flows_d_p[0], flows_d_p[1], flows_d_p[2], flows_d_p[3], flows_d_p[4], flows_d_p[5], flows_d_p[6], flows_d_p[7], flows_d_p[8], flows_d_p[9]))
+        f.write('Travel_demand_d per people: [{},{},{},{},{},{},{},{},{},{}]\n'.format(total_travel_demand_d_p[0], total_travel_demand_d_p[1], total_travel_demand_d_p[2], total_travel_demand_d_p[3], total_travel_demand_d_p[4], total_travel_demand_d_p[5], total_travel_demand_d_p[6], total_travel_demand_d_p[7], total_travel_demand_d_p[8], total_travel_demand_d_p[9]))
 
-        f.write('Travel_demand_D_survey per people: [{},{},{},{},{},{},{},{},{},{}]\n'.format(flows_D_survey_p[0], flows_D_survey_p[1], flows_D_survey_p[2], flows_D_survey_p[3], flows_D_survey_p[4], flows_D_survey_p[5], flows_D_survey_p[6], flows_D_survey_p[7], flows_D_survey_p[8], flows_D_survey_p[9]))
+        f.write('Travel_demand_D_survey per people: [{},{},{},{},{},{},{},{},{},{}]\n'.format(total_travel_demand_D_survey_p[0], total_travel_demand_D_survey_p[1], total_travel_demand_D_survey_p[2], total_travel_demand_D_survey_p[3], total_travel_demand_D_survey_p[4], total_travel_demand_D_survey_p[5], total_travel_demand_D_survey_p[6], total_travel_demand_D_survey_p[7], total_travel_demand_D_survey_p[8], total_travel_demand_D_survey_p[9]))
 
-        f.write('Travel_demand_D_simulation per people: [{},{},{},{},{},{},{},{},{},{}]\n'.format(flows_D_simulation_p[0], flows_D_simulation_p[1], flows_D_simulation_p[2], flows_D_simulation_p[3], flows_D_simulation_p[4], flows_D_simulation_p[5], flows_D_simulation_p[6], flows_D_simulation_p[7], flows_D_simulation_p[8], flows_D_simulation_p[9]))
+        f.write('Travel_demand_D_simulation per people: [{},{},{},{},{},{},{},{},{},{}]\n'.format(total_travel_demand_D_simulation_p[0], total_travel_demand_D_simulation_p[1], total_travel_demand_D_simulation_p[2], total_travel_demand_D_simulation_p[3], total_travel_demand_D_simulation_p[4], total_travel_demand_D_simulation_p[5], total_travel_demand_D_simulation_p[6], total_travel_demand_D_simulation_p[7], total_travel_demand_D_simulation_p[8], total_travel_demand_D_simulation_p[9]))
