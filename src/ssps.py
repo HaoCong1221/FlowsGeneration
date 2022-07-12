@@ -88,7 +88,7 @@ def computing(area, miu, parameter, sp_data_sweden_x, sp_data_sweden_y, sp_data_
     return flows, flows_d, flows_D_survey, flows_D_simulation
 
 if __name__ == "__main__":  
-    target_ssp = 'ssp2_{}'
+    target_ssp = 'ssp1_{}'
     target_name = ["yr2010", "yr2020", "yr2030", "yr2040", "yr2050", "yr2060", "yr2070", "yr2080", "yr2090", "yr2100"]
     poplution = []
     
